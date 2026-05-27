@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/orders/$tableId')({
     component: OrderDetailsComponent,
@@ -9,7 +9,9 @@ function OrderDetailsComponent() {
 
     return (
         <>
-            <h3>Order for table №{tableId}</h3>
+            <Link to="/">← Back</Link>
+            <h3>Table {tableId}</h3>
+            <p>Order details</p>
         </>
     )
 }
