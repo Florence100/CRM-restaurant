@@ -1,12 +1,24 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { TableGrid } from '@/features/tables-map';
-import { Tables } from '@/types/index';
+export type TableStatus = 'free' | 'res' | 'occ';
 
-export const Route = createFileRoute('/')({
-    component: HomeComponent,
-})
+export interface OrderItem  {
+    id: number;
+    title: string;
+    quantity: number;
+    price: number;
+}
 
-const mockTables: Tables = [
+export interface Table {
+    id: number;
+    number: string;
+    status: TableStatus;
+    order: OrderItem[];
+    bookingTime?: string;
+    notes?: string;
+}
+
+export type Tables = Table[];
+
+export const mockTables: Tables = [
   { "id": 1, "number": "1", "status": "occ", "order": [{ "id": 1, "title": "Pizza Dough", "price": 45, "quantity": 2 }, { "id": 3, "title": "Bruchetta", "price": 15, "quantity": 1 }], "notes": "Пиццу подать погорячее" },
   { "id": 2, "number": "2", "status": "res", "bookingTime": "18:00", "order": [], "notes": "" },
   { "id": 3, "number": "3", "status": "occ", "order": [{ "id": 2, "title": "Chicken Karahi", "price": 15, "quantity": 1 }, { "id": 4, "title": "Banoffee Pie", "price": 40, "quantity": 3 }], "notes": "Десерты вместе с кофе" },
@@ -25,11 +37,3 @@ const mockTables: Tables = [
   { "id": 16, "number": "A1", "status": "res", "bookingTime": "18:30", "order": [], "notes": "" },
   { "id": 17, "number": "A2", "status": "free", "order": [], "notes": "" }
 ]
-
-function HomeComponent() {
-    return (
-        <div className='bg-light-gray p-6 pt-12 pb-12 rounded-lg'>
-            <TableGrid tables={mockTables} />
-        </div>
-    )
-}

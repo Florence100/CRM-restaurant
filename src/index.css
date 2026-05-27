@@ -4,6 +4,13 @@
   --font-inter: 'Inter', sans-serif;
   --color-black: #222222;
   --color-dark-gray: #393939;
+  --color-gray: #B1B1B1;
+  --color-light-gray: #F9F9F9;
+  --color-card-occ: #FFF9E2;
+  --color-card-res: #FFE8E8;
+  --color-status-free: #D3E79D;
+  --color-status-occ: #FFE68E;
+  --color-status-res: #FF5858;
 }
 
 @layer base {
