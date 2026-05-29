@@ -1,9 +1,12 @@
 import { Table } from '@/types/index';
 import { useNavigate } from '@tanstack/react-router';
+import { useContext } from 'react';
+import { TableFilterContext } from '@/context/TableFilterContext';
 
 export function TableCard({ table }: { table: Table }) {
     const navigate = useNavigate();
     const status = table.status;
+    const currentFilter = useContext(TableFilterContext);
 
     let cardColor = '';
     let statusColor = '';
@@ -27,8 +30,14 @@ export function TableCard({ table }: { table: Table }) {
             break;
     }
 
+    let statusStyle = '';
+
+    if (currentFilter !== 'all' && currentFilter !== status) {
+        statusStyle = ' opacity-0 pointer-events-none';
+    }
+
     return (
-        <div className={"p-2 aspect-[1/1] rounded-lg cursor-pointer border-1 border-gray-300 hover:shadow transition relative" + cardColor}
+        <div className={"p-2 aspect-[1/1] rounded-lg cursor-pointer border-1 border-gray-300 hover:shadow transition relative" + cardColor + statusStyle}
             onClick={
                 () => {
                     navigate({

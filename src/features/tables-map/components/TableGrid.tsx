@@ -16,7 +16,7 @@ export function TableGrid({ tables }: TableGridProps) {
             </div>
 
             {/* DESKTOP */}
-            <div className="hidden lg:grid grid-cols-6 grid-rows-3 gap-x-16 gap-y-12">
+            <div className="hidden lg:grid grid-cols-6 grid-rows-3 gap-x-20 gap-y-8">
 
                 {/* 1 row */}
                 <div className="col-start-1 row-start-1">
