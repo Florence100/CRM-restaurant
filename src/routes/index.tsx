@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { TableGrid, TableSummary } from '@/features/tables-map';
+import { TableGrid, TableSummary } from '@/features/tables';
 import useTables from '@/hooks/useTables';
 import { useState } from 'react';
 import {TableFilterContext} from '@/context/TableFilterContext';

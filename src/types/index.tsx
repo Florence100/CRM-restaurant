@@ -5,6 +5,10 @@ export interface OrderItem  {
     title: string;
     quantity: number;
     price: number;
+    mealType: string[];
+    isSentToKitchen: boolean;
+    image?: string;
+    notes?:string;
 }
 
 export interface Table {
@@ -12,8 +16,12 @@ export interface Table {
     number: string;
     status: TableStatus;
     order: OrderItem[];
+    orderStatus?: 'active' | 'precheck';
     bookingTime?: string;
-    notes?: string;
 }
 
 export type Tables = Table[];
+
+export type OrderProps = {
+    table: Table;
+}
