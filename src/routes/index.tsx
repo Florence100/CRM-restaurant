@@ -3,6 +3,7 @@ import { TableGrid, TableSummary } from '@/features/tables';
 import useTables from '@/hooks/useTables';
 import { useState } from 'react';
 import {TableFilterContext} from '@/context/TableFilterContext';
+import { ErrorMessage } from '@/ui/ErrorMessage';
 
 export const Route = createFileRoute('/')({
     component: HomeComponent,
@@ -22,11 +23,7 @@ function HomeComponent() {
     }
 
     if (isError) {
-        return (
-            <div className='bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-xl font-medium'>
-                Ошибка при получении данных о столах. Пожалуйста, обновите страницу.
-            </div>
-        );
+        return <ErrorMessage />
     }
 
     return (

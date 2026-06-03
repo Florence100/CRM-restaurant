@@ -1,7 +1,8 @@
-import { OrderProps } from '@/types';
+export type AddDishControlProps = {
+    setIsMenuOpen: (val: boolean) => void;
+}
 
-export default function Control({ table }: OrderProps) {
-    console.log(table)
+export default function AddDishControl({ setIsMenuOpen }: AddDishControlProps) {
     return (
         <div className='flex items-center gap-12'>
 
@@ -9,7 +10,7 @@ export default function Control({ table }: OrderProps) {
                 <button
                     id='add-btn' 
                     className='size-[26px] bg-black text-white rounded-sm font-bold cursor-pointer'
-                    onClick={() => alert('click')}
+                    onClick={() => setIsMenuOpen(true)}
                 >+</button>
                 <label htmlFor='add-btn' className='font-semibold opacity-40 cursor-pointer'>Add dish</label>
             </div>

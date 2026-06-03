@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { TableContext } from '@/context/TableContext';
 import { fetchTables } from '@/services/api';
-import { TableStatus, Tables } from '@/types';
+import { TableStatus, Tables, OrderItem, Dish } from '@/types';
 
 /**
  * TODO: FUTURE UPDATE FOR REAL BACKEND AND REAL-TIME UPDATES
@@ -10,7 +10,7 @@ import { TableStatus, Tables } from '@/types';
  * We use a hybrid state. We get starter data from DummyJSON using TanStack Query 
  * and save changes locally using React Context and localStorage.
  * * Advantages of this approach:
- * 1. UI Isolation: Components (like the tables grid or shopping cart) only use the useTables() hook. 
+ * 1. UI Isolation: Components (like the tables grid or order cart) only use the useTables() hook. 
  * They do not know where the data comes from. When we change the backend, we do not need to rewrite the UI.
  * 2. WebSockets support: In a real restaurant, different waiters use different tablets. 
  * We can easily add a WebSocket connection inside this provider. When the server sends an update, 
@@ -48,13 +48,103 @@ export const TableProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         localStorage.setItem('tables', JSON.stringify(updated));
     };
 
+    const updateOrder = (tableId: number, order: OrderItem[]) => {
+        const updated = tables.map((t) => 
+            t.id === tableId ? { ...t, order } : t
+        )
+
+        setTables(updated);
+        localStorage.setItem('tables', JSON.stringify(updated));
+    };
+
+    const clearTable = (tableId: number) => {
+        const updated = tables.map((t) => 
+            t.id === tableId 
+                ? { ...t, status: 'free', order: [], bookingTime: undefined, orderStatus: undefined } 
+                : t
+        )
+
+        setTables(updated as Tables);
+        localStorage.setItem('tables', JSON.stringify(updated));
+    };
+
+    const addToOrder = (tableId: number, dish: Dish) => {
+        const updated = tables.map((t) => {
+            if (t.id !== tableId) return t;
+
+            const existingNewItemIndex = t.order.findIndex(
+                (item) => item.id === dish.id && !item.isSentToKitchen
+            );
+
+            const updatedOrder = [...t.order];
+
+            if (existingNewItemIndex > -1) {
+                updatedOrder[existingNewItemIndex] = {
+                    ...updatedOrder[existingNewItemIndex],
+                    quantity: updatedOrder[existingNewItemIndex].quantity + 1,
+                };
+            } else {
+                const newItem: OrderItem = {
+                    id: dish.id,
+                    title: dish.title,
+                    price: dish.price,
+                    image: dish.image,
+                    quantity: 1,
+                    isSentToKitchen: false,
+                    notes: '',
+                };
+                updatedOrder.push(newItem);
+            }
+
+            const newStatus = t.status === 'free' ? 'occ' : t.status;
+
+            return { ...t, order: updatedOrder, status: newStatus };
+        })
+
+        setTables(updated);
+        localStorage.setItem('tables', JSON.stringify(updated));
+    }
+
+    const removeFromOrder = (tableId: number, dishId: number) => {
+        const updated = tables.map((t) => {
+            if (t.id !== tableId) return t;
+
+            const existingItemIndex = t.order.findIndex(
+                (item) => item.id === dishId && !item.isSentToKitchen
+            );
+
+            if (existingItemIndex === -1) return t;
+
+            const updatedOrder = [...t.order];
+            const currentItem = updatedOrder[existingItemIndex];
+
+            if (currentItem.quantity > 1) {
+                updatedOrder[existingItemIndex] = {
+                    ...currentItem,
+                    quantity: currentItem.quantity - 1,
+                };
+            } else {
+                updatedOrder.splice(existingItemIndex, 1);
+            }
+
+            return { ...t, order: updatedOrder };
+        });
+
+        setTables(updated);
+        localStorage.setItem('tables', JSON.stringify(updated));
+    };
+
     return (
         <TableContext.Provider
             value={{ 
                 tables, 
                 isLoading: tables.length === 0 && isLoading,
                 isError, 
-                updateTableStatus 
+                updateTableStatus,
+                updateOrder,
+                clearTable,
+                addToOrder,
+                removeFromOrder
             }}
         >
             {children}

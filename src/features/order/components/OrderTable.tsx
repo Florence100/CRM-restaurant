@@ -1,7 +1,20 @@
-import { OrderProps } from '@/types';
+import useTables from '@/hooks/useTables';
+import { Table } from '@/types';
+import DeleteButton from '@/ui/DeleteButton';
 // import CheckBox from '@/ui/CheckBox';
 
-export default function OrderTable({ table }: OrderProps) {
+type OrderTableProps = {
+    table: Table
+}
+
+export default function OrderTable({ table }: OrderTableProps) {
+    const { updateOrder, addToOrder, removeFromOrder } = useTables();
+
+    function deleteHandler(itemId: number) {
+        const updatedOrder = table.order.filter(item => item.id !== itemId);
+        updateOrder(table.id, updatedOrder);
+    }
+
     return (
         <table className='w-full border-separate border-spacing-y-4'> 
             <thead>
@@ -36,34 +49,40 @@ export default function OrderTable({ table }: OrderProps) {
                         </td>
 
                         <td className='bg-white'>
-                            <div className='flex gap-2 items-center justify-center'>
+                            <div className='flex gap-3 items-center justify-center'>
+
                                 <button 
-                                    className='flex items-center justify-center rounded-full size-[30px] bg-[#F0F0F0] cursor-pointer font-semibold text-lg disabled:opacity-50 disabled:cursor-auto'
+                                    className='flex items-center justify-center rounded-full size-[30px] bg-lime-200 cursor-pointer font-semibold text-lg disabled:bg-gray-100 disabled:cursor-auto hover:not-disabled:bg-lime-300'
                                     aria-label='Decrease'
-                                    disabled={ item.isSentToKitchen ? true : false }
+                                    disabled={item.isSentToKitchen}
+                                    onClick={() => removeFromOrder(table.id, item.id)}
                                 >
-                                    <svg width="11" height="3" viewBox="0 0 11 3" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <svg width="10" height="3" viewBox="0 0 10 2" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M0 2.54261V0H10.0568V2.54261H0Z" fill="#353535"/>
                                     </svg>
                                 </button>
+
                                 <div className='rounded-full flex items-center justify-center size-[30px] font-bold border border-gray'>{item.quantity}</div>
+                                
                                 <button 
-                                    className='flex items-center justify-center rounded-full size-[30px] bg-[#F0F0F0] cursor-pointer font-semibold text-lg disabled:opacity-50 disabled:cursor-auto' 
+                                    className='flex items-center justify-center rounded-full size-[30px] bg-lime-200 cursor-pointer font-semibold text-lg disabled:bg-gray-100 disabled:cursor-auto hover:not-disabled:bg-lime-300' 
                                     aria-label='Decrease'
-                                    disabled={ item.isSentToKitchen ? true : false }
+                                    disabled={item.isSentToKitchen}
+                                    onClick={() => addToOrder(table.id, item)}
                                 >
-                                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M3.7571 10.0568V0H6.29972V10.0568H3.7571ZM0 6.29972V3.7571H10.0568V6.29972H0Z" fill="#353535"/>
                                     </svg>
                                 </button>
+
                             </div>
                         </td>
 
                         <td className='bg-white'>
-                            <p className='font-semibold'>{item.price * item.quantity}$</p>
+                            <p className='font-semibold w-[60px]'>{item.price * item.quantity}$</p>
                         </td>
 
-                        <td className='bg-white'>
+                        {/* <td className='bg-white'>
                             {item.notes 
                                 ? <svg className='cursor-pointer' width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M15.5996 3C17.8398 3 18.9608 2.99957 19.8164 3.43555C20.5689 3.81902 21.181 4.43109 21.5645 5.18359C22.0004 6.03924 22 7.16018 22 9.40039V12.1553C22 14.395 22.0002 15.5155 21.5645 16.3711C21.181 17.1236 20.5688 17.7356 19.8164 18.1191C18.9608 18.5551 17.8398 18.5557 15.5996 18.5557H6.8584C6.59324 18.5557 6.33887 18.6611 6.15137 18.8486L3.70703 21.293C3.07709 21.9228 2.00012 21.4767 2 20.5859V9.40039C2 7.16018 1.99957 6.03924 2.43555 5.18359C2.81902 4.43109 3.43109 3.81902 4.18359 3.43555C5.03924 2.99957 6.16018 3 8.40039 3H15.5996ZM8.66699 12C8.11474 12 7.66705 12.4478 7.66699 13C7.66705 13.5522 8.11474 14 8.66699 14H12C12.5521 13.9998 12.9999 13.5521 13 13C12.9999 12.4479 12.5521 12.0002 12 12H8.66699ZM8.66699 7.55566C8.11471 7.55566 7.66699 8.00338 7.66699 8.55566C7.66705 9.1079 8.11474 9.55566 8.66699 9.55566H15.334C15.8859 9.55531 16.3339 9.10768 16.334 8.55566C16.334 8.0036 15.886 7.55602 15.334 7.55566H8.66699Z" fill="#222222"/>
@@ -74,20 +93,18 @@ export default function OrderTable({ table }: OrderProps) {
                                     <path d="M7 13L14 13" stroke="#222222" strokeLinecap="round" strokeLinejoin="round"/>
                                 </svg>
                             }
-                        </td>
+                        </td> */}
 
                         <td className='bg-white'>
-                            <button
-                                className='rounded-full flex items-center justify-center size-[30px] border border-dark-gray text-dark-gray cursor-pointer hover:not-disabled:bg-[#F0F0F0] disabled:opacity-50 disabled:cursor-auto'
+                            <DeleteButton 
                                 aria-label='delete'
-                                disabled={ item.isSentToKitchen ? true : false }
-                            >
-                                ✕
-                            </button>
+                                disabled={item.isSentToKitchen}
+                                onClick={() => deleteHandler(item.id)}
+                            />
                         </td>
 
                         <td className='rounded-r-sm bg-white'>
-                            <p className='text-lime-500'>{ item.isSentToKitchen ? 'Sent' : ''}</p>
+                            <p className='text-lime-500'>{ item.isSentToKitchen ? 'Cooking' : ''}</p>
                         </td>
 
                     </tr>

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useContext } from 'react';
 import { TableContext } from '@/context/TableContext';
-import { Order } from '@/features/order';
+import { OrderDetailView } from '@/features/order';
 
 export const Route = createFileRoute('/orders/$tableId')({
     component: OrderDetailsComponent,
@@ -28,7 +28,7 @@ function OrderDetailsComponent() {
                 </div>
             </div>
 
-            { table && <Order table={table} />}
+            { table && <OrderDetailView table={table} />}
 
         </div>
     )

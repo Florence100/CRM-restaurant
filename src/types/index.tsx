@@ -5,9 +5,8 @@ export interface OrderItem  {
     title: string;
     quantity: number;
     price: number;
-    mealType: string[];
     isSentToKitchen: boolean;
-    image?: string;
+    image: string;
     notes?:string;
 }
 
@@ -22,6 +21,9 @@ export interface Table {
 
 export type Tables = Table[];
 
-export type OrderProps = {
-    table: Table;
+export interface Dish {
+    id: number;
+    title: string;
+    price: number;
+    image: string;
 }
