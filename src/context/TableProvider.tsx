@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { TableContext } from '@/context/TableContext';
 import { fetchTables } from '@/services/api';
@@ -26,125 +26,143 @@ export const TableProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return saved ? JSON.parse(saved) : [];
     });
 
+    useEffect(() => {
+        localStorage.setItem('tables', JSON.stringify(tables));
+    }, [tables]);
+
     const { isLoading, isError } = useQuery({
         queryKey: ['initial-tables'],
         queryFn: async () => {
             const data = await fetchTables();
-
             setTables(data);
-            localStorage.setItem('tables', JSON.stringify(data));
-            
+
             return data;
         },
         enabled: tables.length === 0,
     });
 
     const updateTableStatus = (tableId: number, status: TableStatus, time?: string) => {
-        const updated = tables.map((t) =>
-            t.id === tableId ? { ...t, status, bookingTime: time } : t
-        );
-
-        setTables(updated);
-        localStorage.setItem('tables', JSON.stringify(updated));
-    };
-
-    const updateOrder = (tableId: number, order: OrderItem[]) => {
-        const updated = tables.map((t) => 
-            t.id === tableId ? { ...t, order } : t
+        setTables(prev => 
+            prev.map((t) => 
+                t.id === tableId ? { ...t, status, bookingTime: time } : t
+            )
         )
-
-        setTables(updated);
-        localStorage.setItem('tables', JSON.stringify(updated));
     };
 
     const clearTable = (tableId: number) => {
-        const updated = tables.map((t) => 
-            t.id === tableId 
-                ? { ...t, status: 'free', order: [], bookingTime: undefined, orderStatus: undefined } 
-                : t
+        setTables(prev =>
+            prev.map((t) => 
+                t.id === tableId
+                    ? { ...t, status: 'free', order: [], bookingTime: undefined, orderStatus: undefined }
+                    : t
+            )
         )
-
-        setTables(updated as Tables);
-        localStorage.setItem('tables', JSON.stringify(updated));
     };
 
     const addToOrder = (tableId: number, dish: Dish) => {
-        const updated = tables.map((t) => {
-            if (t.id !== tableId) return t;
+        setTables(prev => 
+            prev.map((t) => {
+                if (t.id !== tableId) return t;
 
-            const existingNewItemIndex = t.order.findIndex(
-                (item) => item.id === dish.id && !item.isSentToKitchen
-            );
+                const existingNewItemIndex = t.order.findIndex(
+                    (item) => item.id === dish.id && !item.isSentToKitchen
+                );
 
-            const updatedOrder = [...t.order];
+                const updatedOrder = [...t.order];
 
-            if (existingNewItemIndex > -1) {
-                updatedOrder[existingNewItemIndex] = {
-                    ...updatedOrder[existingNewItemIndex],
-                    quantity: updatedOrder[existingNewItemIndex].quantity + 1,
-                };
-            } else {
-                const newItem: OrderItem = {
-                    id: dish.id,
-                    title: dish.title,
-                    price: dish.price,
-                    image: dish.image,
-                    quantity: 1,
-                    isSentToKitchen: false,
-                    notes: '',
-                };
-                updatedOrder.push(newItem);
-            }
+                if (existingNewItemIndex > -1) {
+                    updatedOrder[existingNewItemIndex] = {
+                        ...updatedOrder[existingNewItemIndex],
+                        quantity: updatedOrder[existingNewItemIndex].quantity + 1,
+                    };
+                } else {
+                    const newItem: OrderItem = {
+                        id: dish.id,
+                        title: dish.title,
+                        price: dish.price,
+                        image: dish.image,
+                        quantity: 1,
+                        isSentToKitchen: false,
+                        notes: '',
+                    };
+                    updatedOrder.push(newItem);
+                }
 
-            const newStatus = t.status === 'free' ? 'occ' : t.status;
+                const newStatus = (t.status === 'free' || t.status === 'res') ? 'occ' : t.status;
 
-            return { ...t, order: updatedOrder, status: newStatus };
-        })
-
-        setTables(updated);
-        localStorage.setItem('tables', JSON.stringify(updated));
+                return { ...t, order: updatedOrder, status: newStatus, bookingTime: undefined };
+            })
+        )
     }
 
     const removeFromOrder = (tableId: number, dishId: number) => {
-        const updated = tables.map((t) => {
-            if (t.id !== tableId) return t;
+        setTables(prev => 
+            prev.map((t) => {
+                if (t.id !== tableId) return t;
 
-            const existingItemIndex = t.order.findIndex(
-                (item) => item.id === dishId && !item.isSentToKitchen
-            );
+                const existingItemIndex = t.order.findIndex(
+                    (item) => item.id === dishId && !item.isSentToKitchen
+                );
 
-            if (existingItemIndex === -1) return t;
+                if (existingItemIndex === -1) return t;
 
-            const updatedOrder = [...t.order];
-            const currentItem = updatedOrder[existingItemIndex];
+                const updatedOrder = [...t.order];
+                const currentItem = updatedOrder[existingItemIndex];
 
-            if (currentItem.quantity > 1) {
-                updatedOrder[existingItemIndex] = {
-                    ...currentItem,
-                    quantity: currentItem.quantity - 1,
-                };
-            } else {
-                updatedOrder.splice(existingItemIndex, 1);
-            }
+                if (currentItem.quantity > 1) {
+                    updatedOrder[existingItemIndex] = {
+                        ...currentItem,
+                        quantity: currentItem.quantity - 1,
+                    };
+                } else {
+                    updatedOrder.splice(existingItemIndex, 1);
+                }
 
-            return { ...t, order: updatedOrder };
-        });
-
-        setTables(updated);
-        localStorage.setItem('tables', JSON.stringify(updated));
+                return { ...t, order: updatedOrder };
+            })
+        )
     };
+
+    const sendToKitchen = (tableId: number) => {
+        setTables(prev =>
+            prev.map((t) => {
+                if (t.id !== tableId) return t;
+
+                const updatedOrder = [...t.order];
+
+                t.order.forEach((dish) => {
+                    const index = updatedOrder.findIndex(d => d === dish);
+
+                    if (dish.isSentToKitchen) {
+                        return;
+                    } else {
+                        const existingItemIndex = updatedOrder.findIndex(d => (d.id === dish.id) && (d.isSentToKitchen === true));
+
+                        if (existingItemIndex > -1) {
+                            updatedOrder[existingItemIndex].quantity += dish.quantity;
+                            updatedOrder.splice(index, 1);
+                        } else {
+                            updatedOrder[index].isSentToKitchen = true;
+                        }
+                    }
+                })
+
+                return { ...t, order: updatedOrder };
+            })
+        )
+    }
 
     return (
         <TableContext.Provider
             value={{ 
-                tables, 
+                tables,
                 isLoading: tables.length === 0 && isLoading,
                 isError, 
                 updateTableStatus,
-                updateOrder,
                 clearTable,
                 addToOrder,
-                removeFromOrder
+                removeFromOrder,
+                sendToKitchen
             }}
         >
             {children}

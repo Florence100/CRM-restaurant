@@ -42,7 +42,7 @@ export function TableCard({ table }: { table: Table }) {
                 () => {
                     navigate({
                         to: '/orders/$tableId',
-                        params: { tableId: table.number.toString() }
+                        params: { tableId: table.id.toString() }
                     })
                 }
             }
