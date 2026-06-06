@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { TableGrid, TableSummary } from '@/features/tables';
-import useTables from '@/hooks/useTables';
+import { useTables } from '@/context/TablesContext';
 import { useState } from 'react';
-import {TableFilterContext} from '@/context/TableFilterContext';
+import { TableFilterContext } from '@/features/tables/index';
 import { ErrorMessage } from '@/ui/ErrorMessage';
 
 export const Route = createFileRoute('/')({

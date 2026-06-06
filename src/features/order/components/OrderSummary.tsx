@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Table } from '@/types';
 import { Button, ButtonTransparent } from '@/ui/Button';
-import useTables from '@/hooks/useTables';
+import { useTables } from '@/context/TablesContext';
 import CrossButton from '@/ui/CrossButton';
 import { useNavigate } from '@tanstack/react-router';
 

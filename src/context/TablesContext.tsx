@@ -1,8 +1,21 @@
+import { createContext, useContext } from 'react';
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { TableContext } from '@/context/TableContext';
-import { fetchTables } from '@/services/api';
-import { TableStatus, Tables, OrderItem, Dish } from '@/types';
+import { fetchTables } from '@/features/tables/index';
+import { Table, TableStatus, Tables, OrderItem, Dish } from '@/types';
+
+interface TablesContextType {
+    tables: Table[];
+    isLoading: boolean;
+    isError: boolean;
+    updateTableStatus: (tableId: number, status: TableStatus, time?: string) => void;
+    clearTable: (tableId: number) => void;
+    addToOrder: (tableId: number, dish: Dish) => void;
+    removeFromOrder: (tableId: number, dishId: number) => void;
+    sendToKitchen: (tableId: number) => void;
+}
+
+const TablesContext = createContext<TablesContextType | undefined>(undefined);
 
 /**
  * TODO: FUTURE UPDATE FOR REAL BACKEND AND REAL-TIME UPDATES
@@ -20,7 +33,7 @@ import { TableStatus, Tables, OrderItem, Dish } from '@/types';
  * sync data between the real database and the client.
  */
 
-export const TableProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const TablesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [tables, setTables] = useState<Tables>(() => {
         const saved = localStorage.getItem('tables');
         return saved ? JSON.parse(saved) : [];
@@ -153,7 +166,7 @@ export const TableProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
 
     return (
-        <TableContext.Provider
+        <TablesContext.Provider
             value={{ 
                 tables,
                 isLoading: tables.length === 0 && isLoading,
@@ -166,6 +179,15 @@ export const TableProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             }}
         >
             {children}
-        </TableContext.Provider>
+        </TablesContext.Provider>
     );
 }
+
+export function useTables () {
+    const context = useContext(TablesContext);
+
+    if (!context) throw new Error();
+    
+    return context;
+}
+

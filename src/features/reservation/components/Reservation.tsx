@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Table } from '@/types/index';
-import useTables from '@/hooks/useTables';
+import { useTables } from '@/context/TablesContext';
 import { Button } from '@/ui/Button';
 import { TimePickerSlots } from './TimePickerSlots';
 

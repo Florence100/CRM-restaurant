@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchMenu } from '@/services/api';
+import { fetchMenu } from '../services/index';
 import { Dish, Table } from '@/types/index';
 import { ErrorMessage } from '@/ui/ErrorMessage';
 import { LoadingMessage } from '@/ui/LoadingMessage';
-import useTables from '@/hooks/useTables';
+import { useTables } from '@/context/TablesContext';
 
 type MenuProp = {
     table: Table;

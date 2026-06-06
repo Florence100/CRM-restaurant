@@ -1,7 +1,7 @@
 import { Table } from '@/types/index';
 import { useNavigate } from '@tanstack/react-router';
 import { useContext } from 'react';
-import { TableFilterContext } from '@/context/TableFilterContext';
+import { TableFilterContext } from '@/features/tables/index';
 
 export function TableCard({ table }: { table: Table }) {
     const navigate = useNavigate();
