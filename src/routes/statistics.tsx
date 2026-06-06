@@ -7,7 +7,7 @@ export const Route = createFileRoute('/statistics')({
 function Statistics() {
   return (
     <>
-      <h3>Statistics</h3>
+      <h3>There will be statistics here...</h3>
     </>
   )
 }
