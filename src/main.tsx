@@ -4,7 +4,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { routeTree } from './routeTree.gen';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { TableProvider } from '@/context/TableProvider';
+import { TablesProvider } from '@/context/TablesContext';
 import './index.css';
 
 const queryClient = new QueryClient();
@@ -24,9 +24,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
         <QueryClientProvider client={queryClient}>
 
-            <TableProvider>
+            <TablesProvider>
                 <RouterProvider router={router} />
-            </TableProvider>
+            </TablesProvider>
 
             <ReactQueryDevtools initialIsOpen={false} />
 

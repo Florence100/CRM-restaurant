@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { useContext } from 'react';
-import { TableContext } from '@/context/TableContext';
+import { useTables } from '@/context/TablesContext';
 import { OrderDetailView } from '@/features/order';
 import { Reservation } from '@/features/reservation';
 
@@ -10,9 +9,10 @@ export const Route = createFileRoute('/orders/$tableId')({
 
 function OrderDetailsComponent() {
     const { tableId } = Route.useParams();
-    const tableContext = useContext(TableContext);
 
-    const table = tableContext?.tables.find((t) => t.id === +tableId);
+    const { tables } = useTables();
+
+    const table = tables.find((t) => t.id === +tableId);
 
     if (!table) return;
 

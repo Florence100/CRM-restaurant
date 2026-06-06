@@ -1,6 +1,6 @@
 import { Tables } from '@/types/index';
 import { useContext } from 'react';
-import { TableFilterContext } from '@/context/TableFilterContext';
+import { TableFilterContext } from '@/features/tables/index';
 
 type TableGridProps = {
     tables: Tables,

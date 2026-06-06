@@ -1,4 +1,4 @@
-import useTables from '@/hooks/useTables';
+import { useTables } from '@/context/TablesContext';
 import { Table } from '@/types';
 import { CheckIcon } from '@/ui/CheckIcon';
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import OrderSummary from './OrderSummary';
 import AddDishControl from './AddDishControl';
 import OrderTable from './OrderTable';
-import { Menu } from './Menu';
+import { Menu } from '../../menu/components/Menu';
 import { Table } from '@/types';
 import { Button } from '@/ui/Button';
 import CrossButton from '@/ui/CrossButton';
