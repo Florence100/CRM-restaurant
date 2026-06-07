@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StatisticsRouteImport } from './routes/statistics'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrdersIndexRouteImport } from './routes/orders.index'
 import { Route as OrdersTableIdRouteImport } from './routes/orders.$tableId'
@@ -17,6 +18,11 @@ import { Route as OrdersTableIdRouteImport } from './routes/orders.$tableId'
 const StatisticsRoute = StatisticsRouteImport.update({
   id: '/statistics',
   path: '/statistics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,12 +43,14 @@ const OrdersTableIdRoute = OrdersTableIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/statistics': typeof StatisticsRoute
   '/orders/$tableId': typeof OrdersTableIdRoute
   '/orders/': typeof OrdersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/statistics': typeof StatisticsRoute
   '/orders/$tableId': typeof OrdersTableIdRoute
   '/orders': typeof OrdersIndexRoute
@@ -50,20 +58,28 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/statistics': typeof StatisticsRoute
   '/orders/$tableId': typeof OrdersTableIdRoute
   '/orders/': typeof OrdersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/statistics' | '/orders/$tableId' | '/orders/'
+  fullPaths: '/' | '/login' | '/statistics' | '/orders/$tableId' | '/orders/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/statistics' | '/orders/$tableId' | '/orders'
-  id: '__root__' | '/' | '/statistics' | '/orders/$tableId' | '/orders/'
+  to: '/' | '/login' | '/statistics' | '/orders/$tableId' | '/orders'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/statistics'
+    | '/orders/$tableId'
+    | '/orders/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
   StatisticsRoute: typeof StatisticsRoute
   OrdersTableIdRoute: typeof OrdersTableIdRoute
   OrdersIndexRoute: typeof OrdersIndexRoute
@@ -76,6 +92,13 @@ declare module '@tanstack/react-router' {
       path: '/statistics'
       fullPath: '/statistics'
       preLoaderRoute: typeof StatisticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,6 +127,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
   StatisticsRoute: StatisticsRoute,
   OrdersTableIdRoute: OrdersTableIdRoute,
   OrdersIndexRoute: OrdersIndexRoute,
