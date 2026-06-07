@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, ReactNode, FC } from 'react';
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTables } from '@/features/tables/index';
@@ -33,7 +33,7 @@ const TablesContext = createContext<TablesContextType | undefined>(undefined);
  * sync data between the real database and the client.
  */
 
-export const TablesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const TablesProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [tables, setTables] = useState<Tables>(() => {
         const saved = localStorage.getItem('tables');
         return saved ? JSON.parse(saved) : [];
@@ -183,7 +183,7 @@ export const TablesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     );
 }
 
-export function useTables () {
+export function useTables() {
     const context = useContext(TablesContext);
 
     if (!context) throw new Error();

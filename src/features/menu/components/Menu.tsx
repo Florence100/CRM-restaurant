@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchMenu } from '../services/index';
+import { fetchMenu } from '../services/api';
 import { Dish, Table } from '@/types/index';
 import { ErrorMessage } from '@/ui/ErrorMessage';
 import { LoadingMessage } from '@/ui/LoadingMessage';
