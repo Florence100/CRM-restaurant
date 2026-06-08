@@ -75,4 +75,4 @@ npm run dev
 
 ## Deploy
 
-`https://crm-restaurant.netlify.app/`
+[(Live Demo)](https://crm-restaurant.netlify.app)
