@@ -1,7 +1,5 @@
 import { fetchWithAuth } from '@/features/auth';
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 interface ApiOneResponse {
     id: number;
     name: string,
@@ -14,6 +12,6 @@ type ApiAllResponse = {
 };
 
 export async function fetchMenu(): Promise<ApiAllResponse> {
-    const res = await fetchWithAuth(`${API_URL}/recipes`);
+    const res = await fetchWithAuth('/api/recipes');
     return await res.json();
 }
