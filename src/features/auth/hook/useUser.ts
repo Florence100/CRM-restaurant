@@ -6,5 +6,6 @@ export function useUser(token: string | null) {
         queryKey: ['me'],
         queryFn: () => getUser(token!),
         enabled: !!token,
+        retry: false,
     })
 }

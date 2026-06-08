@@ -30,8 +30,8 @@ export default function OrderSummary({ table }: OrderSummaryProps) {
     return (
         <div className='flex flex-col gap-2'>
             <h3 className='font-semibold'>Total</h3>
-            <div className='flex justify-between p-4 border border-black rounded-sm'>
-                <div className='font-semibold text-[32px]'>${total}</div>
+            <div className='flex gap-4 items-center justify-between p-4 border border-black rounded-sm max-sm:p-2'>
+                <div className='font-semibold text-[32px] max-sm:text-2xl'>${total}</div>
                 {
                     table.order.every(item => item.isSentToKitchen === true)
                         ? (
@@ -49,12 +49,12 @@ export default function OrderSummary({ table }: OrderSummaryProps) {
             { isModalOpen && 
                 <>
                     <div className='absolute w-[600px] max-w-full h-[350px] max-h-full top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white z-250 flex flex-col rounded-lg'>
-                        <div className='w-[100%] p-6 pb-4 pt-4 border-b border-gray flex items-center bg-light-gray justify-end rounded-t-lg'>
+                        <div className='w-[100%] p-6 max-xl:p-4 max-sm:p-2 pb-4 pt-4 border-b border-gray flex items-center bg-light-gray justify-end rounded-t-lg'>
                             <CrossButton onClick={() => setIsModalOpen(false)} />
                         </div>
-                        <div className='p-6 h-lvh flex flex-col justify-center items-center gap-20'>
-                            <h2 className='font-bold text-2xl'>Payment method: </h2>
-                            <div className='flex gap-6 w-full justify-center'>
+                        <div className='p-6 max-xl:p-4 max-sm:p-2 h-lvh flex flex-col justify-center items-center gap-20'>
+                            <h2 className='font-bold text-2xl max-sm:text-xl'>Payment method: </h2>
+                            <div className='flex gap-6 w-full justify-center max-sm:gap-2'>
                                 <Button className='max-w-[250px]' onClick={ payHandler }>Cash</Button>
                                 <Button className='max-w-[250px]' onClick={ payHandler }>Bank card</Button>
                             </div>

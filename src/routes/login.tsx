@@ -22,18 +22,15 @@ function LoginPage() {
     const [ isShowedPassword, setIsShowedPassword ] = useState(false);
 
     function togglePasswordVisible() {
-        // e.preventDefault();
         isShowedPassword ? setIsShowedPassword(false) : setIsShowedPassword(true);
     }
 
     const handleLogin = async () => {
         try {
-            const res = await loginMutation.mutateAsync({
+            await loginMutation.mutateAsync({
                 username,
                 password,
             })
-
-            console.log(res)
 
             navigate({ to: '/' });
         } catch (e) {
@@ -43,7 +40,7 @@ function LoginPage() {
 
     return (
         <div className='w-full h-lvh bg-black flex justify-center items-center'>
-            <form className='relative flex bg-white flex-col gap-4 w-[450px] max-w-full p-6 pb-10 rounded-xl border max-sm:p-4'>
+            <form className='relative flex bg-white flex-col gap-4 w-[450px] max-w-full p-6 max-xl:p-4 max-sm:p-2 pb-10 rounded-xl border max-sm:p-4'>
 
                 <div className='flex flex-col gap-8 max-sm:gap-6'>
                     <h1 className='font-bold text-xl text-center'>Login form</h1>

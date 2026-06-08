@@ -186,7 +186,18 @@ export const TablesProvider: FC<{ children: ReactNode }> = ({ children }) => {
 export function useTables() {
     const context = useContext(TablesContext);
 
-    if (!context) throw new Error();
+    if (!context) {
+        return {
+            tables: [],
+            isLoading: false,
+            isError: false,
+            updateTableStatus: () => {},
+            clearTable: () => {},
+            addToOrder: () => {},
+            removeFromOrder: () => {},
+            sendToKitchen: () => {},
+        };
+    }
     
     return context;
 }
