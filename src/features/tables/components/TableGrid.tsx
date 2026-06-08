@@ -9,14 +9,14 @@ export function TableGrid({ tables }: TableGridProps) {
     return (
         <>
             {/* MOBILE / TABLET */}
-            <div className='lg:hidden grid grid-cols-2 sm:grid-cols-3 gap-4'>
+            <div className='lg:hidden grid gap-4 max-md:grid-cols-2 grid-cols-3'>
                 {tables.map((table) => (
                     <TableCard key={table.id} table={table} />
                 ))}
             </div>
 
             {/* DESKTOP */}
-            <div className='hidden lg:grid grid-cols-6 grid-rows-3 gap-x-20 gap-y-8'>
+            <div className='hidden lg:grid grid-cols-6 grid-rows-3 gap-y-8 lg:gap-x-10 xl:gap-x-15 2xl:gap-x-20 '>
 
                 {/* 1 row */}
                 <div className='col-start-1 row-start-1'>

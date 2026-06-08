@@ -35,7 +35,7 @@ export function TimePickerSlots({ onConfirm, onCancel }: TimePickerSlotsProps) {
     const slots = generateTimeSlots();
 
     return (
-        <div className='absolute flex flex-col gap-4 p-4 bg-white rounded-xl border border-gray'>
+        <div className='absolute flex flex-col gap-4 p-4 bg-white rounded-xl border border-gray z-200 max-md:w-[calc(100%-16px)] max-md:p-2'>
             <h3 className='font-bold text-sm opacity-50 uppercase tracking-wider text-center'>
                 Select Booking Time
             </h3>

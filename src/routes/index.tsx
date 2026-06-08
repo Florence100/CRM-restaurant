@@ -31,7 +31,7 @@ function HomeComponent() {
             <h1 className='text-2xl font-bold'>Tables</h1>
             <TableFilterContext.Provider value={currentFilter}>
                 <TableSummary tables={tables} setCurrentFilter={setCurrentFilter} />
-                <div className='bg-light-gray p-6 pt-12 pb-12 rounded-lg'>
+                <div className='bg-light-gray p-6 pt-12 pb-12 max-xl:p-4 max-xl:pt-10 max-xl:pb-10 max-lg:pb-4 max-lg:pt-4 max-sm:p-2 rounded-lg'>
                     <TableGrid tables={tables} />
                 </div>
             </TableFilterContext.Provider>

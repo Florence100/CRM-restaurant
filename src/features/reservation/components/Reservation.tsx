@@ -18,7 +18,7 @@ export function Reservation({table}: ReservationProps) {
     };
 
     return (
-        <div className='w-[300px] flex flex-col gap-3'>
+        <div className='w-[300px] flex flex-col gap-3 max-sm:w-full'>
             {table.status === 'free' && (
                 !isBooking ? (
                     <Button
