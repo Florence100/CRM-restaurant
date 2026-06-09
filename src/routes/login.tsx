@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useLogin } from '@/features/auth';
 import { Button } from '@/ui/Button';
+import { fieldValidate } from '@/utils/fieldValidate';
 import closeEyeIcon from '@/assets/icons/eye-close.svg';
 import openEyeIcon from '@/assets/icons/eye-open.svg';
 
@@ -26,27 +27,12 @@ function LoginPage() {
         isShowedPassword ? setIsShowedPassword(false) : setIsShowedPassword(true);
     }
 
-    function usernameValidate(name: string) {
-        if (name.length === 0) {
-            setIsUsernameValid(false);
-            return false;
-        }
-        setIsUsernameValid(true);
-        return true;
-    }
-
-    function passwordValidate(password: string) {
-        if (password.length < 8) {
-            setIsPasswordValid(false);
-            return false;
-        }
-        setIsPasswordValid(true);
-        return true;
-    }
-
     const handleLogin = async () => {
-        const usernameValid = usernameValidate(username);
-        const passwordValid = passwordValidate(password);
+        const usernameValid = fieldValidate('username', username);
+        const passwordValid = fieldValidate('password', password);
+
+        setIsUsernameValid(usernameValid);
+        setIsPasswordValid(passwordValid);
 
         if (!usernameValid || !passwordValid) return;
 
