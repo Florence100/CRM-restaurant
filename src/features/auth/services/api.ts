@@ -1,4 +1,4 @@
-export interface LoginResponse {
+interface LoginResponse {
     id: number
     username: string
     firstName: string
@@ -12,15 +12,21 @@ interface Tokens {
     refreshToken: string;
 }
 
+interface User {
+    id: number;
+    firstName: string;
+    lastName: string;
+    username: string;
+    role: string;
+}
+
 let isRefreshing = false;
 let refreshSubscribers: ((token: string) => void)[] = [];
-
 
 function onRefreshed(token: string) {
     refreshSubscribers.forEach(cb => cb(token));
     refreshSubscribers = [];
 }
-
 
 async function refreshAccessToken(): Promise<string> {
     const refreshToken = localStorage.getItem('refreshToken');
@@ -41,7 +47,6 @@ async function refreshAccessToken(): Promise<string> {
 
     return data.accessToken;
 }
-
 
 export async function fetchWithAuth(url: string, options: RequestInit = {}): Promise<Response> {
     const accessToken = localStorage.getItem('accessToken');
@@ -82,11 +87,7 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}): Pro
     return response;
 }
 
-
-export async function login(
-    username: string,
-    password: string,
-): Promise<LoginResponse> {
+export async function login(username: string, password: string): Promise<LoginResponse> {
     const response = await fetchWithAuth(
         '/api/auth/login',
         {
@@ -109,20 +110,18 @@ export async function login(
     return response.json();
 }
 
-
 export function logout() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
 }
 
-
-export async function getUser(token: string | null) {
+export async function getUser(token: string | null): Promise<User | null> {
     if (!token) {
         return null;
     }
 
     const response = await fetchWithAuth(
-        '/api/auth/me',
+        '/api/user/me',
         {
             headers: {
                 Authorization: `Bearer ${token}`,
