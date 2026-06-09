@@ -7,9 +7,9 @@ interface ApiOneResponse {
     image: string;
 }
 
-type ApiAllResponse = {
+interface ApiAllResponse {
     recipes: Array<ApiOneResponse>;
-};
+}
 
 export async function fetchMenu(): Promise<ApiAllResponse> {
     const res = await fetchWithAuth('/api/recipes');

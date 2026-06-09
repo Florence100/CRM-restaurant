@@ -77,17 +77,18 @@ export const TablesProvider: FC<{ children: ReactNode }> = ({ children }) => {
             prev.map((t) => {
                 if (t.id !== tableId) return t;
 
-                const existingNewItemIndex = t.order.findIndex(
+                const hasExistingItem = t.order.some(
                     (item) => item.id === dish.id && !item.isSentToKitchen
                 );
 
-                const updatedOrder = [...t.order];
+                let updatedOrder:OrderItem[];
 
-                if (existingNewItemIndex > -1) {
-                    updatedOrder[existingNewItemIndex] = {
-                        ...updatedOrder[existingNewItemIndex],
-                        quantity: updatedOrder[existingNewItemIndex].quantity + 1,
-                    };
+                if (hasExistingItem) {
+                    updatedOrder = t.order.map((item) => 
+                        item.id === dish.id && !item.isSentToKitchen
+                            ? { ...item, quantity: item.quantity + 1 }
+                            : item
+                    );
                 } else {
                     const newItem: OrderItem = {
                         id: dish.id,
@@ -98,12 +99,17 @@ export const TablesProvider: FC<{ children: ReactNode }> = ({ children }) => {
                         isSentToKitchen: false,
                         notes: '',
                     };
-                    updatedOrder.push(newItem);
+                    updatedOrder = [...t.order, newItem];
                 }
 
                 const newStatus = (t.status === 'free' || t.status === 'res') ? 'occ' : t.status;
 
-                return { ...t, order: updatedOrder, status: newStatus, bookingTime: undefined };
+                return { 
+                    ...t, 
+                    order: updatedOrder, 
+                    status: newStatus, 
+                    bookingTime: undefined 
+                };
             })
         )
     }
@@ -113,23 +119,17 @@ export const TablesProvider: FC<{ children: ReactNode }> = ({ children }) => {
             prev.map((t) => {
                 if (t.id !== tableId) return t;
 
-                const existingItemIndex = t.order.findIndex(
-                    (item) => item.id === dishId && !item.isSentToKitchen
-                );
+                let decreased = false;
 
-                if (existingItemIndex === -1) return t;
+                const mappedOrder = t.order.map((item) => {
+                    if(item.id === dishId && !item.isSentToKitchen && !decreased) {
+                        decreased = true;
+                        return { ...item, quantity: item.quantity - 1 }
+                    }
+                    return item;
+                })
 
-                const updatedOrder = [...t.order];
-                const currentItem = updatedOrder[existingItemIndex];
-
-                if (currentItem.quantity > 1) {
-                    updatedOrder[existingItemIndex] = {
-                        ...currentItem,
-                        quantity: currentItem.quantity - 1,
-                    };
-                } else {
-                    updatedOrder.splice(existingItemIndex, 1);
-                }
+                const updatedOrder = mappedOrder.filter((item) => item.quantity > 0);
 
                 return { ...t, order: updatedOrder };
             })
@@ -141,26 +141,33 @@ export const TablesProvider: FC<{ children: ReactNode }> = ({ children }) => {
             prev.map((t) => {
                 if (t.id !== tableId) return t;
 
-                const updatedOrder = [...t.order];
-
-                t.order.forEach((dish) => {
-                    const index = updatedOrder.findIndex(d => d === dish);
+                const updatedOrder = t.order.reduce<OrderItem[]>((acc, dish) => {
 
                     if (dish.isSentToKitchen) {
-                        return;
-                    } else {
-                        const existingItemIndex = updatedOrder.findIndex(d => (d.id === dish.id) && (d.isSentToKitchen === true));
-
-                        if (existingItemIndex > -1) {
-                            updatedOrder[existingItemIndex].quantity += dish.quantity;
-                            updatedOrder.splice(index, 1);
-                        } else {
-                            updatedOrder[index].isSentToKitchen = true;
-                        }
+                        acc.push(dish);
+                        return acc;
                     }
-                })
 
-                return { ...t, order: updatedOrder };
+                    const existingKitchenItemIndex = acc.findIndex(
+                        (item) => item.id === dish.id && item.isSentToKitchen
+                    );
+
+                    if (existingKitchenItemIndex > -1) {
+                        acc[existingKitchenItemIndex] = {
+                            ...acc[existingKitchenItemIndex],
+                            quantity: acc[existingKitchenItemIndex].quantity + dish.quantity
+                        };
+                    } else {
+                        acc.push({
+                            ...dish,
+                            isSentToKitchen: true
+                        });
+                    }
+
+                    return acc;
+                }, []);
+
+            return { ...t, order: updatedOrder };
             })
         )
     }
