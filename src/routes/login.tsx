@@ -18,42 +18,73 @@ function LoginPage() {
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [formError, setFormError] = useState('');
-
+    const [isUsernameValid, setIsUsernameValid] = useState(true);
+    const [isPasswordValid, setIsPasswordValid] = useState(true);
     const [ isShowedPassword, setIsShowedPassword ] = useState(false);
 
     function togglePasswordVisible() {
         isShowedPassword ? setIsShowedPassword(false) : setIsShowedPassword(true);
     }
 
+    function usernameValidate(name: string) {
+        if (name.length === 0) {
+            setIsUsernameValid(false);
+            return false;
+        }
+        setIsUsernameValid(true);
+        return true;
+    }
+
+    function passwordValidate(password: string) {
+        if (password.length < 8) {
+            setIsPasswordValid(false);
+            return false;
+        }
+        setIsPasswordValid(true);
+        return true;
+    }
+
     const handleLogin = async () => {
+        const usernameValid = usernameValidate(username);
+        const passwordValid = passwordValidate(password);
+
+        if (!usernameValid || !passwordValid) return;
+
         try {
             await loginMutation.mutateAsync({
                 username,
                 password,
-            })
+            }, )
 
             navigate({ to: '/' });
-        } catch (e) {
-            setFormError('Something went wrong. Try again');
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                setFormError(e.message);
+            }
         }
     }
 
     return (
         <div className='w-full h-lvh bg-black flex justify-center items-center'>
-            <form className='relative flex bg-white flex-col gap-4 w-[450px] max-w-full p-6 max-xl:p-4 max-sm:p-2 pb-10 rounded-xl border max-sm:p-4'>
+            <form className='flex bg-white flex-col gap-4 m-2 w-[450px] max-w-full p-6 max-xl:p-4 max-sm:p-2 rounded-xl border max-sm:p-4'>
 
-                <div className='flex flex-col gap-8 max-sm:gap-6'>
+                <div className='flex flex-col gap-4 max-sm:gap-6'>
                     <h1 className='font-bold text-xl text-center'>Login form</h1>
 
-                    <input
-                        className='w-full p-3 pl-4 pr-4 bg-light-gray border-b-2 border-gray rounded-t-sm focus:border-b-black focus:outline-hidden focus:border-b-2'
-                        value={username}
-                        onChange={(e) => setUserName(e.target.value)}
-                        placeholder='Please, enter emilys'
-                        autoFocus
-                    ></input>
+                    <div className='flex flex-col gap-1'>
+                        <input
+                            className='w-full p-3 pl-4 pr-4 bg-light-gray border-b-2 border-gray rounded-t-sm focus:border-b-black focus:outline-hidden focus:border-b-2'
+                            value={username}
+                            onChange={(e) => setUserName(e.target.value)}
+                            placeholder='Please, enter emilys'
+                            autoFocus
+                        ></input>
+                        <p className='min-h-[18px] text-xs text-rose-400 font-semibold pl-4'>
+                            {!isUsernameValid && 'Please enter the name'}
+                        </p>
+                    </div>
                 
-                    <div className='relative'>
+                    <div className='relative flex flex-col gap-1'>
                         <input
                             className='w-full p-3 pl-4 pr-12 bg-light-gray border-b-2 border-gray rounded-t-sm focus:border-b-black focus:outline-hidden focus:border-b-2'
                             type={ isShowedPassword ? 'text' : 'password' }
@@ -62,6 +93,9 @@ function LoginPage() {
                             placeholder='Please, enter emilyspass'
                         >
                         </input>
+                        <p className='min-h-[18px] text-xs text-rose-400 font-semibold pl-4'>
+                            {!isPasswordValid && 'Password must be at least 8 characters'}
+                        </p>
                         <button
                                 type='button'
                                 onClick={togglePasswordVisible}
@@ -85,7 +119,7 @@ function LoginPage() {
                     </Button>
                 </div>
 
-                <span className='absolute left-0 bottom-3 w-full text-sm text-rose-400 text-center font-semibold'>{formError}</span>
+                <span className='min-h-[18px] w-full text-xs text-rose-400 text-center font-semibold'>{formError}</span>
 
             </form>
         </div>

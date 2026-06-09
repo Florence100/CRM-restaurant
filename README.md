@@ -1,30 +1,78 @@
-# React + TypeScript + Vite
+# Restaurant Management CRM
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Single Page Application (SPA) designed to automate internal restaurant operations. The system enables administrators and hosts to monitor table availability, manage guest seating statuses, and process active orders in real time.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+### 1. Authentication Module
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+* **Access Control:** Secure user authentication utilizing JWT tokens (`accessToken`).
+* **Session Management:** Route guards restrict access to private views. Unauthorized users are automatically redirected to the login interface.
 
-- Configure the top-level `parserOptions` property like this:
+### 2. Table Management
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+* **Real-Time Monitoring:** Visual dashboard mapping 17 seating zones with color-coded status indicators (`free`, `res`, `occ`).
+* **Initial Data Hydration:** Table configurations, numbering (including special zones `A1` and `A2`), booking times, and active orders are fetched from a custom DummyJSON API endpoint.
+* **Table Details:** Contextual panel displaying current status and invoice summary upon selecting a table.
+
+### 3. Order & Menu Management
+
+* **Data Transformation:** Menu items are dynamically populated from the standard DummyJSON recipes endpoint. The application interceptor transforms the original preparation time property (`prepTimeMinutes`) into the item price.
+* **Order Construction:** Displays item prices, images, quantities, and order submission statuses (`isSentToKitchen`) for occupied tables with automated total bill calculation.
+
+### 4. Responsive Design
+
+* **Mobile-friendly layout**
+* **Burger navigation menu**
+
+---
+
+## Tech Stack
+
+* **Core:** React 18, TypeScript
+* **Build Tool:** Vite (Configured with Reverse Proxy on Netlify to handle CORS compliance)
+* **Styling:** Tailwind CSS
+* **Routing:** TanStack Router (File-based routing)
+* **Data Fetching & Caching:** TanStack Query (React Query)
+* **Deployment:** Netlify
+
+---
+
+## Local Deployment Instructions
+
+1. Clone the repository:
+```bash
+git clone https://github.com/Florence100/crm-restaurant.git
+
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+2. Navigate to the project directory:
+```bash
+cd crm-restaurant
+
+```
+
+
+3. Install project dependencies:
+```bash
+npm install
+
+```
+
+
+4. Start the local development server:
+```bash
+npm run dev
+
+```
+
+
+5. Access the application via the local host URL: `http://localhost:5173`
+
+
+## Deploy
+
+[(Live Demo)](https://crm-restaurant.netlify.app)

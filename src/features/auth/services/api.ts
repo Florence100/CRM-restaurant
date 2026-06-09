@@ -1,5 +1,3 @@
-const API_URL = import.meta.env.VITE_API_URL;
-
 export interface LoginResponse {
     id: number
     username: string
@@ -28,7 +26,7 @@ async function refreshAccessToken(): Promise<string> {
     const refreshToken = localStorage.getItem('refreshToken');
     if (!refreshToken) throw new Error('No refresh token');
 
-    const res = await fetch(`${API_URL}/auth/refresh`, {
+    const res = await fetch('/api/auth/refresh', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refreshToken, expiresInMins: 30 }),
@@ -90,7 +88,7 @@ export async function login(
     password: string,
 ): Promise<LoginResponse> {
     const response = await fetchWithAuth(
-        `${API_URL}/auth/login`,
+        '/api/auth/login',
         {
             method: 'POST',
             headers: {
@@ -124,7 +122,7 @@ export async function getUser(token: string | null) {
     }
 
     const response = await fetchWithAuth(
-        `${API_URL}/auth/me`,
+        '/api/auth/me',
         {
             headers: {
                 Authorization: `Bearer ${token}`,
