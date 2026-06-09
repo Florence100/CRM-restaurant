@@ -13,9 +13,11 @@ export default function OrderTable({ table }: OrderTableProps) {
         <table className='w-full border-separate border-spacing-y-4'> 
             <thead className='max-sm:hidden'>
                 <tr>
-                    <th colSpan={2} className='font-semibold opacity-40 text-left'>Dish</th>
+                    <th colSpan={2} className='font-semibold opacity-40 text-left pl-2'>Dish</th>
                     <th className='font-semibold opacity-40'>Price</th>
                     <th className='font-semibold opacity-40'>Amount</th>
+                    <th className='font-semibold opacity-40 max-lg:hidden'>Total</th>
+                    <th className='font-semibold opacity-40 max-lg:hidden'>Сonfirmed</th>
                 </tr>
             </thead>
 
@@ -23,20 +25,20 @@ export default function OrderTable({ table }: OrderTableProps) {
                 {table.order.map((item) => (
                     <tr key={`${item.id}_${item.isSentToKitchen}`}>
 
-                        <td className='rounded-l-sm bg-white p-4 max-sm:hidden'>
+                        <td className='rounded-l-sm bg-white p-2 pl-4 pt-4 pb-4 max-sm:hidden'>
                             <img src={item.image} alt={item.title} className='size-[30px] object-cover rounded-full' />
                         </td>
 
-                        <td className='bg-white font-semibold max-sm:text-xs'>
-                            <p className='p-4 max-sm:p-2'>{item.title}</p>
+                        <td className='bg-white font-semibold max-sm:text-xs p-2 pt-4 pb-4 max-sm:p-2'>
+                            <p>{item.title}</p>
                         </td>
 
-                        <td className='bg-white text-center'>
-                            <p className='font-semibold p-4 max-sm:p-2'>{item.price}$</p>
+                        <td className='bg-white text-center p-2 pt-4 pb-4 max-sm:p-2'>
+                            <p className='font-semibold'>{item.price}$</p>
                         </td>
 
-                        <td className='bg-white'>
-                            <div className='p-4 flex gap-3 items-center justify-center max-sm:gap-2 max-sm:p-2'>
+                        <td className='bg-white p-2 pt-4 pb-4 max-sm:p-2'>
+                            <div className='flex gap-3 items-center justify-center max-sm:gap-2'>
 
                                 <button 
                                     className='flex items-center justify-center rounded-full size-[30px] bg-lime-200 cursor-pointer font-semibold text-lg disabled:bg-gray-100 disabled:cursor-auto hover:not-disabled:bg-lime-300'
@@ -64,12 +66,14 @@ export default function OrderTable({ table }: OrderTableProps) {
                             </div>
                         </td>
 
-                        <td className='bg-white max-sm:hidden p-4'>
+                        <td className='bg-white max-sm:hidden text-center p-2 pt-4 pb-4'>
                             <p className='font-semibold min-w-[40px]'>{item.price * item.quantity}$</p>
                         </td>
 
-                        <td className='rounded-r-sm bg-white p-4 max-sm:p-2'>
-                            <CheckIcon fill='oklch(64.8% 0.2 131.684)' className={`${item.isSentToKitchen ? 'opacity-100' : 'opacity-30'}`} />
+                        <td className='rounded-r-sm bg-white p-4 pl-2 pr-2 max-sm:p-2 text-center'>
+                            <div className='flex justify-center'>
+                                <CheckIcon fill='oklch(64.8% 0.2 131.684)' className={`${item.isSentToKitchen ? 'opacity-100' : 'opacity-30'}`} />
+                            </div>
                         </td>
 
                     </tr>
