@@ -5,6 +5,28 @@ type TableGridProps = {
     tables: Tables
 }
 
+const DESKTOP_LAYOUT_MAP: Record<string, string> = {
+    '1':  'col-start-1 row-start-1',
+    '2':  'col-start-2 row-start-1',
+    '3':  'col-start-3 row-start-1',
+    '4':  'col-start-4 row-start-1',
+    '5':  'col-start-5 row-start-1',
+    'A1': 'col-start-6 row-start-1 -translate-y-6',
+
+    '6':  'col-start-1 row-start-2 translate-x-1/2',
+    '7':  'col-start-2 row-start-2 translate-x-1/2',
+    '8':  'col-start-3 row-start-2 translate-x-1/2',
+    '9':  'col-start-4 row-start-2 translate-x-1/2',
+    '10': 'col-start-5 row-start-2 translate-x-1/2',
+
+    '11': 'col-start-1 row-start-3',
+    '12': 'col-start-2 row-start-3',
+    '13': 'col-start-3 row-start-3',
+    '14': 'col-start-4 row-start-3',
+    '15': 'col-start-5 row-start-3',
+    'A2': 'col-start-6 row-start-3 translate-y-6',
+};
+
 export function TableGrid({ tables }: TableGridProps) {
     return (
         <>
@@ -16,80 +38,16 @@ export function TableGrid({ tables }: TableGridProps) {
             </div>
 
             {/* DESKTOP */}
-            <div className='hidden lg:grid grid-cols-6 grid-rows-3 gap-y-8 lg:gap-x-10 xl:gap-x-15 2xl:gap-x-20 '>
+            <div className='hidden lg:grid grid-cols-6 grid-rows-3 gap-y-8 lg:gap-x-10 xl:gap-x-15 2xl:gap-x-20'>
+                {tables.map((table) => {
+                    const positionClass = DESKTOP_LAYOUT_MAP[table.number] || '';
 
-                {/* 1 row */}
-                <div className='col-start-1 row-start-1'>
-                    <TableCard table={tables[0]} />
-                </div>
-
-                <div className='col-start-2 row-start-1'>
-                    <TableCard table={tables[1]} />
-                </div>
-
-                <div className='col-start-3 row-start-1'>
-                    <TableCard table={tables[2]} />
-                </div>
-
-                <div className='col-start-4 row-start-1'>
-                    <TableCard table={tables[3]} />
-                </div>
-
-                <div className='col-start-5 row-start-1'>
-                    <TableCard table={tables[4]} />
-                </div>
-
-                {/* A1 */}
-                <div className='col-start-6 row-start-1 -translate-y-6'>
-                    <TableCard table={tables[15]} />
-                </div>
-
-                {/* 2 row */}
-                <div className='col-start-1 row-start-2 translate-x-1/2'>
-                    <TableCard table={tables[5]} />
-                </div>
-
-                <div className='col-start-2 row-start-2 translate-x-1/2'>
-                    <TableCard table={tables[6]} />
-                </div>
-
-                <div className='col-start-3 row-start-2 translate-x-1/2'>
-                    <TableCard table={tables[7]} />
-                </div>
-
-                <div className='col-start-4 row-start-2 translate-x-1/2'>
-                    <TableCard table={tables[8]} />
-                </div>
-
-                <div className='col-start-5 row-start-2 translate-x-1/2'>
-                    <TableCard table={tables[9]} />
-                </div>
-
-                {/* 3 row */}
-                <div className='col-start-1 row-start-3'>
-                    <TableCard table={tables[10]} />
-                </div>
-
-                <div className='col-start-2 row-start-3'>
-                    <TableCard table={tables[11]} />
-                </div>
-
-                <div className='col-start-3 row-start-3'>
-                    <TableCard table={tables[12]} />
-                </div>
-
-                <div className='col-start-4 row-start-3'>
-                    <TableCard table={tables[13]} />
-                </div>
-
-                <div className='col-start-5 row-start-3'>
-                    <TableCard table={tables[14]} />
-                </div>
-
-                {/* A2 */}
-                <div className='col-start-6 row-start-3 translate-y-6'>
-                    <TableCard table={tables[16]} />
-                </div>
+                    return (
+                        <div key={table.id} className={positionClass}>
+                            <TableCard table={table} />
+                        </div>
+                    );
+                })}
             </div>
         </>
     )
